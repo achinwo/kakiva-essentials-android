@@ -28,6 +28,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ng.gearone.kakivaessentials.ProductListActivity" />
         </activity>
+        <activity
+            android:name=".SignInActivity"
+            android:label="@string/name_sign_in_activity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>

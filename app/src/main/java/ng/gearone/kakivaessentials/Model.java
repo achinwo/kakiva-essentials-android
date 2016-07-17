@@ -60,7 +60,7 @@ public class Model {
         public String details, title, currency;
 
         @Exclude
-        public Context mContext;
+        public Bitmap image;
 
         @Exclude
         @Override
@@ -68,24 +68,11 @@ public class Model {
             return "products";
         }
 
-        @Exclude
-        public Bitmap getImage() {
-            int resId = mContext.getResources().getIdentifier(imageUrl, "drawable", mContext.getPackageName());
-            if (resId > 0) {
-                return BitmapFactory.decodeResource(mContext.getResources(), resId);
-            }
-            Log.d("Product", "unable to get resource id of " + imageUrl);
-            return null;
-
-        }
-
         @Override
         public void save(final DbContext db) {
             super.save(db);
-            Bitmap bitmap = getImage();
-
-            if (bitmap != null) {
-                Utils.uploadImage(bitmap, imageUrl + ".jpg")
+            if (image != null) {
+                Utils.uploadImage(image, imageUrl + ".jpg")
                         .done(new DoneCallback<String>() {
                             @Override
                             public void onDone(String result) {

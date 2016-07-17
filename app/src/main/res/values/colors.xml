@@ -8,4 +8,10 @@
     <color name="black_54">#89000000</color>
     <color name="quoteBg">#c8e6c9</color>
     <color name="muted">#9E9E9E</color>
+
+    <color name="blue_grey_500">#607D8B</color>
+    <color name="blue_grey_600">#546E7A</color>
+    <color name="blue_grey_700">#455A64</color>
+    <color name="blue_grey_800">#37474F</color>
+    <color name="blue_grey_900">#263238</color>
 </resources>

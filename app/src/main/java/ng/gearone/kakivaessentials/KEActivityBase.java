@@ -196,7 +196,7 @@ public class KEActivityBase extends AppCompatActivity implements DbContext, Dial
     }
 
     public void onClick(View view) {
-
+        Log.d(TAG, "view clicked: "+view);
     }
 
     @Override

@@ -14,4 +14,6 @@
 
     <dimen name="card_padding">16dp</dimen>
     <dimen name="card_margin">4dp</dimen>
+
+    <dimen name="g_top_margin">100dp</dimen>
 </resources>

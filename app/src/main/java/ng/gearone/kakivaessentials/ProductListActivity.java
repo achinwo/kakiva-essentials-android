@@ -2,43 +2,32 @@ package ng.gearone.kakivaessentials;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.util.LruCache;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-
-import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
-import com.android.volley.toolbox.Volley;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-
-import ng.gearone.kakivaessentials.dummy.DummyContent;
-
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -59,15 +48,22 @@ public class ProductListActivity extends KEActivityBase {
     private boolean mTwoPane;
     private GridView mGridView;
     DatabaseReference mProductsRef;
-    private ChildEventListener mProductsListener = new ChildEventListener() {
+    private ProductAdapter mAdapter;
+    private View loginFormView;
+
+    private ChildEventListener mPrdsChildEventListener = new ChildEventListener() {
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-            Log.d(TAG, "onChildAdded: " + s);
+            Log.d(TAG, "onChildAdded: " + dataSnapshot.getKey());
+            Model.Product prd = dataSnapshot.getValue(Model.Product.class);
+            getAppState().mProducts.add(prd);
+            mAdapter.notifyDataSetChanged();
+            Log.d(TAG, "Product: "+prd.imageUrl);
         }
 
         @Override
         public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-            Log.d(TAG, "onChildChanged: " + s);
+            Log.d(TAG, "onChildChanged: " + dataSnapshot.getKey());
         }
 
         @Override
@@ -77,7 +73,7 @@ public class ProductListActivity extends KEActivityBase {
 
         @Override
         public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-            Log.d(TAG, "onChildMoved: " + s);
+            Log.d(TAG, "onChildMoved: " + dataSnapshot.getKey());
         }
 
         @Override
@@ -92,9 +88,10 @@ public class ProductListActivity extends KEActivityBase {
         setContentView(R.layout.activity_product_list);
 
         mGridView = (GridView) findViewById(R.id.gridview);
-        final ProductAdapter adapter = new ProductAdapter(this);
+        mAdapter = new ProductAdapter(this);
         assert mGridView != null;
-        mGridView.setAdapter(adapter);
+        mGridView.setAdapter(mAdapter);
+        mAdapter.mValues = getAppState().mProducts;
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -119,39 +116,80 @@ public class ProductListActivity extends KEActivityBase {
 
         signInAnon();
         mProductsRef = mDb.getReference("products");
-
+        loginFormView = findViewById(R.id.login_form);
+        assert loginFormView != null;
 
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        mProductsRef.addChildEventListener(mProductsListener);
+        mProductsRef.addChildEventListener(mPrdsChildEventListener);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mProductsRef.removeEventListener(mProductsListener);
+        mProductsRef.removeEventListener(mPrdsChildEventListener);
     }
 
     @Override
     public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
         super.onAuthStateChanged(firebaseAuth);
-        if (getUser() != null)
-            ((ProductAdapter) mGridView.getAdapter()).mValues = DummyContent.ITEMS;
+        loginFormView.setVisibility(getAppState().isSignedIn() ? View.GONE : View.VISIBLE);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.options_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.menu_logout).setVisible(getAppState().isSignedIn());
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        Log.d(TAG, "Menu clicked " + item);
+        switch (item.getItemId()) {
+            case R.id.menu_logout:
+                Toast.makeText(this, "Logged out", Toast.LENGTH_SHORT).show();
+                invalidateOptionsMenu();
+                recreate();
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        return true;
+    }
+
+    public void onClick(View view) {
+        int id = view.getId();
+
+        switch (id) {
+            case R.id.login_btn:
+                Log.d(TAG, "doing log in...");
+                Intent loginActivity = new Intent(this, SignInActivity.class);
+                startActivity(loginActivity);
+                break;
+        }
     }
 
     public class ProductAdapter extends BaseAdapter {
         private Context mContext;
-        public List<Model.Product> mValues;
+        public List<Model.Product> mValues = Collections.emptyList();
 
         public ProductAdapter(Context c) {
             mContext = c;
         }
 
         public int getCount() {
-            return mValues != null ? mValues.size() : 0;
+            return mValues.size();
         }
 
         public Object getItem(int position) {
@@ -172,35 +210,18 @@ public class ProductListActivity extends KEActivityBase {
                 view = (RelativeLayout) convertView;
             }
 
-            final Model.Product item = DummyContent.ITEMS.get(position);
+            final Model.Product item = mValues.get(position);
 
-            Button mBtn = (Button) view.findViewById(R.id.btn);
-            //mIdView = (TextView) view.findViewById(R.id.text_view_topic_title);
             TextView titleView = (TextView) view.findViewById(R.id.text_view_title);
             titleView.setText(item.title);
 
             NetworkImageView mImageView = (NetworkImageView) view.findViewById(R.id.imageView);
 
-            Uri.Builder b = new Uri.Builder();
-            //https://firebasestorage.googleapis.com/v0/b/kakiva-essentials.appspot.com/o/images%2Fkakiva_conditioner.jpg?alt=media&token=e9245588-789d-440f-b14c-41477d60f68a
-            b.scheme("https").encodedAuthority("firebasestorage.googleapis.com").appendEncodedPath("v0/b/kakiva-essentials.appspot.com/o/").appendPath("images/" + item.imageUrl + ".jpg")
-                    .appendQueryParameter("alt", "media");
-            String url = b.toString();
+            String url = item.imageUrl;
             if (mImageView.getImageURL() == null || !mImageView.getImageURL().equals(url)) {
-
-                Log.d(TAG, "setting url " + url);
                 mImageLoader.get(url, ImageLoader.getImageListener(mImageView, 0, android.R.drawable.ic_dialog_alert));
                 mImageView.setImageUrl(url, mImageLoader);
             }
-
-            mBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.d(TAG, "upload: " + item.imageUrl);
-                    item.mContext = mContext;
-                    item.save(ProductListActivity.this);
-                }
-            });
 
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -227,22 +248,4 @@ public class ProductListActivity extends KEActivityBase {
 
     }
 
-
-//        @Override
-//        public void onBindViewHolder(final ViewHolder holder, int position) {
-//            final Model.Product item = mValues.get(position);
-////            item.id = "16";
-////            item.imageUrl = "https://drive.google.com/uc?id=0BxFEUzGuILdKaGlZQ1FOMGFENW8";
-////            item.title = "Kakiva Conditioner";
-////            item.details = "Our super shea butter, natural oils & neem enriched conditioner for moisturising, conditioning & reviving experience of haircare leaving it soft & lustrious. Intensive haircare especially dry & damaged hair\n" +
-////                    "Paraben free! 500ml";
-//            holder.mItem = item;
-//            //holder.mIdView.setText(mValues.get(position).id);
-//            holder.mContentView.setText(item.title);
-//
-//            //LinearLayout.LayoutParams imgParams = (LinearLayout.LayoutParams) holder.mImageView.getLayoutParams();
-//            //imgParams.width = (int) (mRecyclerView.getWidth() * 0.35);
-//            //holder.mImageView.setLayoutParams(imgParams);
-//
-//
 }

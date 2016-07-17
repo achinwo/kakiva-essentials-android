@@ -11,6 +11,12 @@ import android.util.Log;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterators;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import java.util.ArrayList;
 
 /**
  * Created by anthony on 29/04/16.
@@ -31,10 +37,9 @@ public class AppState {
 
     protected SharedPreferences session;
 
-    private Model.User mUser;
-
     public RequestQueue mRequestQueue;
     public ImageLoader mImageLoader;
+    public ArrayList<Model.Product> mProducts = new ArrayList<>();
 
     public void setRequestQueue(RequestQueue queue) {
         this.mRequestQueue = queue;
@@ -84,4 +89,17 @@ public class AppState {
     }
 
 
+    public Model.Product getProductById(final String id) {
+        return Iterators.find(mProducts.iterator(), new Predicate<Model.Product>() {
+            @Override
+            public boolean apply(Model.Product input) {
+                return input.id.equals(id);
+            }
+        }, null);
+    }
+
+    public boolean isSignedIn() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        return user != null && !user.isAnonymous();
+    }
 }
