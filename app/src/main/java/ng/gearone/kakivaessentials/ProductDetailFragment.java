@@ -25,9 +25,9 @@ public class ProductDetailFragment extends Fragment {
     public static final String ARG_ITEM_ID = "item_id";
 
     /**
-     * The dummy content this fragment is presenting.
+     * The dummy title this fragment is presenting.
      */
-    private DummyContent.DummyItem mItem;
+    private Model.Product mItem;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -49,7 +49,7 @@ public class ProductDetailFragment extends Fragment {
             Activity activity = this.getActivity();
             CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
             if (appBarLayout != null) {
-                appBarLayout.setTitle(mItem.content);
+                appBarLayout.setTitle(mItem.title);
             }
         }
     }

@@ -1,6 +1,5 @@
 package ng.gearone.kakivaessentials;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -8,7 +7,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
-import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 
 /**
@@ -17,7 +15,7 @@ import android.view.MenuItem;
  * item details are presented side-by-side with a list of items
  * in a {@link ProductListActivity}.
  */
-public class ProductDetailActivity extends AppCompatActivity {
+public class ProductDetailActivity extends KEActivityBase {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,13 +67,13 @@ public class ProductDetailActivity extends AppCompatActivity {
         int id = item.getItemId();
         if (id == android.R.id.home) {
             // This ID represents the Home or Up button. In the case of this
-            // activity, the Up button is shown. Use NavUtils to allow users
-            // to navigate up one level in the application structure. For
+            // activity, the Up button is shown. For
             // more details, see the Navigation pattern on Android Design:
             //
             // http://developer.android.com/design/patterns/navigation.html#up-vs-back
             //
-            NavUtils.navigateUpTo(this, new Intent(this, ProductListActivity.class));
+            //navigateUpTo(new Intent(this, TopicListActivity.class));
+            finish();
             return true;
         }
         return super.onOptionsItemSelected(item);

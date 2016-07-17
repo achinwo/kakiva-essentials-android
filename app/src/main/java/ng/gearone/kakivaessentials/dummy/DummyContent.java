@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ng.gearone.kakivaessentials.Model;
+
 /**
  * Helper class for providing sample content for user interfaces created by
  * Android template wizards.
@@ -16,29 +18,53 @@ public class DummyContent {
     /**
      * An array of sample (dummy) items.
      */
-    public static final List<DummyItem> ITEMS = new ArrayList<DummyItem>();
+    public static final List<Model.Product> ITEMS = new ArrayList<>();
+    public static final String[] PRODUCT_NAMES = {"Kakiva Co Hair Spray",
+            "Kakiva Eventone Cream",
+            "Kakiva HRS",
+            "Kakiva Hand Sanitizer",
+            "Kakiva Salon Shampoo",
+            "Kakiva Total Body Lotion",
+            "Kakiva conditioner",
+            "Kakiva Daisy",
+            "Kakiva Face Toner",
+            "Kakiva Hair gel",
+            "Kakiva O Hair Spray",
+            "Kakiva Shampoo",
+            "Kakiva White Body Cream",
+            "Kakiva face toning wash",
+            "Kakiva Edge Control",
+            "Kakiva Fresh Body Lotion",
+            "Kakiva Hair grow",
+            "Kakiva Salon Conditioner",
+            "Kakiva Star",
+            "Kakiva body wash",
+            "kakiva leave-in conditioner"};
 
     /**
      * A map of sample (dummy) items, by ID.
      */
-    public static final Map<String, DummyItem> ITEM_MAP = new HashMap<String, DummyItem>();
-
-    private static final int COUNT = 25;
+    public static final Map<String, Model.Product> ITEM_MAP = new HashMap<>();
 
     static {
         // Add some sample items.
-        for (int i = 1; i <= COUNT; i++) {
+        for (int i = 1; i < PRODUCT_NAMES.length; i++) {
             addItem(createDummyItem(i));
         }
     }
 
-    private static void addItem(DummyItem item) {
+    private static void addItem(Model.Product item) {
         ITEMS.add(item);
         ITEM_MAP.put(item.id, item);
     }
 
-    private static DummyItem createDummyItem(int position) {
-        return new DummyItem(String.valueOf(position), "Item " + position, makeDetails(position));
+    private static Model.Product createDummyItem(int position) {
+        Model.Product product = new Model.Product();
+        product.details = makeDetails(position);
+        product.id = String.valueOf(position);
+        product.imageUrl = PRODUCT_NAMES[position].toLowerCase().replace(' ', '_').replace('-', '_');
+        product.title = PRODUCT_NAMES[position];
+        return product;
     }
 
     private static String makeDetails(int position) {
@@ -50,23 +76,4 @@ public class DummyContent {
         return builder.toString();
     }
 
-    /**
-     * A dummy item representing a piece of content.
-     */
-    public static class DummyItem {
-        public final String id;
-        public final String content;
-        public final String details;
-
-        public DummyItem(String id, String content, String details) {
-            this.id = id;
-            this.content = content;
-            this.details = details;
-        }
-
-        @Override
-        public String toString() {
-            return content;
-        }
-    }
 }

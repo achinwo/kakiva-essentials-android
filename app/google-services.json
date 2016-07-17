@@ -1,0 +1,73 @@
+{
+  "project_info": {
+    "project_number": "821268690884",
+    "firebase_url": "https://kakiva-essentials.firebaseio.com",
+    "project_id": "kakiva-essentials",
+    "storage_bucket": "kakiva-essentials.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:821268690884:android:c35c6a0df496417d",
+        "android_client_info": {
+          "package_name": "ng.gearone.kakivaessentials"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "821268690884-bvtjnf5u65amu36kgrh4rspd0a66ft3m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWvyThpJlvtsoTcfE2XszxwgP7pqHXvOU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:821268690884:android:31d5caeb919473db",
+        "android_client_info": {
+          "package_name": "ng.gearone.kakivaessentials.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "821268690884-bvtjnf5u65amu36kgrh4rspd0a66ft3m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWvyThpJlvtsoTcfE2XszxwgP7pqHXvOU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -33,7 +33,7 @@
         android:layout_marginRight="16dp"
         app:layoutManager="LinearLayoutManager"
         tools:context="ng.gearone.kakivaessentials.ProductListActivity"
-        tools:listitem="@layout/product_list_content" />
+        tools:listitem="@layout/product_list" />
 
     <FrameLayout
         android:id="@+id/product_detail_container"
