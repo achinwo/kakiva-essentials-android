@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "821268690884-4kpd6ejl346e16gg111avfig9om8jmf8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ng.gearone.kakivaessentials",
+            "certificate_hash": "CB82D3DAAA926B9B013EFE0E6A5C100927AC6533"
+          }
+        },
+        {
           "client_id": "821268690884-bvtjnf5u65amu36kgrh4rspd0a66ft3m.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -45,6 +53,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "821268690884-0n0b3ptg9r0csaa4nqvba0f7jn12r80i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ng.gearone.kakivaessentials.debug",
+            "certificate_hash": "CB82D3DAAA926B9B013EFE0E6A5C100927AC6533"
+          }
+        },
         {
           "client_id": "821268690884-bvtjnf5u65amu36kgrh4rspd0a66ft3m.apps.googleusercontent.com",
           "client_type": 3

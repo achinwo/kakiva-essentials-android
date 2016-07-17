@@ -29,7 +29,7 @@ import com.google.firebase.storage.StorageReference;
 /**
  * Created by anthony on 05/04/16.
  */
-public class KEActivityBase extends AppCompatActivity implements DbContext, DialogInterface.OnCancelListener, SwipeRefreshLayout.OnRefreshListener, FirebaseAuth.AuthStateListener {
+public class KEActivityBase extends AppCompatActivity implements DbContext, DialogInterface.OnCancelListener, SwipeRefreshLayout.OnRefreshListener, FirebaseAuth.AuthStateListener, View.OnClickListener {
 
     public static final String TAG = KEActivityBase.class.getSimpleName();
 

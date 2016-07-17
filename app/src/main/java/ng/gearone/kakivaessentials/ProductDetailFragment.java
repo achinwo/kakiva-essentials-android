@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ public class ProductDetailFragment extends Fragment {
      * The fragment argument representing the item ID that this fragment
      * represents.
      */
+    public static final String TAG = ProductDetailFragment.class.getSimpleName();
     public static final String ARG_ITEM_ID = "item_id";
 
     /**
@@ -42,7 +44,9 @@ public class ProductDetailFragment extends Fragment {
             // Load the dummy content specified by the fragment
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
-            mItem = ((KEActivityBase) getActivity()).getAppState().getProductById(getArguments().getString(ARG_ITEM_ID));
+            String itemId = getArguments().getString(ARG_ITEM_ID);
+            Log.d(TAG, "item id: "+itemId);
+            mItem = ((KEActivityBase) getActivity()).getAppState().getProductById(itemId);
 
             Activity activity = this.getActivity();
             CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);

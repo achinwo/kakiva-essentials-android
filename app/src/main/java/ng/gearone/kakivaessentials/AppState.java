@@ -93,6 +93,7 @@ public class AppState {
         return Iterators.find(mProducts.iterator(), new Predicate<Model.Product>() {
             @Override
             public boolean apply(Model.Product input) {
+                Log.d(TAG, "input: "+input.imageUrl+"  serching:"+id);
                 return input.id.equals(id);
             }
         }, null);
