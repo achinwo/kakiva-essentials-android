@@ -6,17 +6,25 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.support.v4.util.LruCache;
+import android.util.ArraySet;
 import android.util.Log;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
+import com.google.common.collect.Sets;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 /**
  * Created by anthony on 29/04/16.
@@ -40,6 +48,7 @@ public class AppState {
     public RequestQueue mRequestQueue;
     public ImageLoader mImageLoader;
     public ArrayList<Model.Product> mProducts = new ArrayList<>();
+    public KeDatabase mDb;
 
     public void setRequestQueue(RequestQueue queue) {
         this.mRequestQueue = queue;
@@ -53,6 +62,14 @@ public class AppState {
 
     }
 
+    public void addProduct(Model.Product prd){
+        if (mProducts.contains(prd)){
+            Log.d(TAG, "already in "+prd.imageUrl);
+        }else{
+            mProducts.add(prd);
+        }
+    }
+
     public boolean isConfigured() {
         return configured;
     }
@@ -63,7 +80,7 @@ public class AppState {
 
     public void configure(Application appContext) {
         mApp = appContext;
-
+        mDb = new KeDatabase(FirebaseDatabase.getInstance(), FirebaseStorage.getInstance().getReferenceFromUrl("gs://kakiva-essentials.appspot.com"));
         session = mApp.getSharedPreferences(APP_SESSION, Context.MODE_PRIVATE);
 
         mConnManager = (ConnectivityManager) mApp.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -93,7 +110,6 @@ public class AppState {
         return Iterators.find(mProducts.iterator(), new Predicate<Model.Product>() {
             @Override
             public boolean apply(Model.Product input) {
-                Log.d(TAG, "input: "+input.imageUrl+"  serching:"+id);
                 return input.id.equals(id);
             }
         }, null);

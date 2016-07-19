@@ -134,7 +134,7 @@ abstract class ModelBase implements Serializable, Comparable<ModelBase> {
 
     @Override
     public boolean equals(Object o) {
-        return o != null && (o.getClass().equals(this.getClass())) && ((ModelBase) o).id.equals(this.id) && ((ModelBase) o).urlPath.equals(this.urlPath);
+        return o != null && (o.getClass().equals(this.getClass())) && ((ModelBase) o).id.equals(this.id);
     }
 
     @Override

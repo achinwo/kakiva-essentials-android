@@ -29,9 +29,9 @@ import com.google.firebase.storage.StorageReference;
 /**
  * Created by anthony on 05/04/16.
  */
-public class KEActivityBase extends AppCompatActivity implements DbContext, DialogInterface.OnCancelListener, SwipeRefreshLayout.OnRefreshListener, FirebaseAuth.AuthStateListener, View.OnClickListener {
+public class KeActivityBase extends AppCompatActivity implements DialogInterface.OnCancelListener, SwipeRefreshLayout.OnRefreshListener, FirebaseAuth.AuthStateListener, View.OnClickListener {
 
-    public static final String TAG = KEActivityBase.class.getSimpleName();
+    public static final String TAG = KeActivityBase.class.getSimpleName();
 
     protected AppState appState;
     protected ProgressDialog mProgressDialog;
@@ -40,8 +40,7 @@ public class KEActivityBase extends AppCompatActivity implements DbContext, Dial
     protected FirebaseAuth mAuth;
 
     protected SwipeRefreshLayout mSwipeLayout;
-    StorageReference mRootStorageRef;
-    FirebaseDatabase mDb;
+    protected KeDatabase mDb;
 
     protected BroadcastReceiver receiver = new BroadcastReceiver() {
 
@@ -53,7 +52,7 @@ public class KEActivityBase extends AppCompatActivity implements DbContext, Dial
     };
 
     public void onReceiveBroadcast(Context context, Intent intent) {
-
+        Log.d(TAG, "Broadcast received: "+intent);
     }
 
     @Override
@@ -63,8 +62,7 @@ public class KEActivityBase extends AppCompatActivity implements DbContext, Dial
         mProgressDialog.setOnCancelListener(this);
         mImageLoader = getAppState().mImageLoader;
         mRequestQueue = getAppState().mRequestQueue;
-        mRootStorageRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://kakiva-essentials.appspot.com");
-        mDb = FirebaseDatabase.getInstance();
+        mDb = getAppState().mDb;
         mAuth = FirebaseAuth.getInstance();
     }
 
@@ -78,7 +76,6 @@ public class KEActivityBase extends AppCompatActivity implements DbContext, Dial
             // User is signed out
             Log.d(TAG, "onAuthStateChanged:signed_out");
         }
-        // ...
     }
 
     public FirebaseUser getUser() {
@@ -97,7 +94,7 @@ public class KEActivityBase extends AppCompatActivity implements DbContext, Dial
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
                             Log.w(TAG, "signInAnonymously", task.getException());
-                            Toast.makeText(KEActivityBase.this, "Authentication failed.",
+                            Toast.makeText(KeActivityBase.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         } else {
                             Log.d(TAG, "Anon sign in successful");
@@ -201,17 +198,8 @@ public class KEActivityBase extends AppCompatActivity implements DbContext, Dial
 
     @Override
     public void onRefresh() {
-        Log.d(TAG, "KEActivityBase: onRefresh");
+        Log.d(TAG, "KeActivityBase: onRefresh");
     }
 
-    @Override
-    public StorageReference getStorageRef() {
-        return mRootStorageRef;
-    }
-
-    @Override
-    public FirebaseDatabase getDbRef() {
-        return mDb;
-    }
 }
 

@@ -46,7 +46,7 @@ public class ProductDetailFragment extends Fragment {
             // to load content from a content provider.
             String itemId = getArguments().getString(ARG_ITEM_ID);
             Log.d(TAG, "item id: "+itemId);
-            mItem = ((KEActivityBase) getActivity()).getAppState().getProductById(itemId);
+            mItem = ((KeActivityBase) getActivity()).getAppState().getProductById(itemId);
 
             Activity activity = this.getActivity();
             CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);

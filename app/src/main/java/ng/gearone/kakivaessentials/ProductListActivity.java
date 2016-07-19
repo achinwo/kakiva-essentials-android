@@ -14,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -32,6 +31,7 @@ import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -43,7 +43,7 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import java.util.ArrayList;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -55,7 +55,7 @@ import java.util.List;
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class ProductListActivity extends KEActivityBase implements GoogleApiClient.OnConnectionFailedListener {
+public class ProductListActivity extends KeActivityBase implements GoogleApiClient.OnConnectionFailedListener {
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -66,7 +66,7 @@ public class ProductListActivity extends KEActivityBase implements GoogleApiClie
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
             Model.Product prd = dataSnapshot.getValue(Model.Product.class);
             prd.id = dataSnapshot.getKey();
-            getAppState().mProducts.add(prd);
+            getAppState().addProduct(prd);
             mAdapter.notifyDataSetChanged();
         }
 
@@ -136,7 +136,7 @@ public class ProductListActivity extends KEActivityBase implements GoogleApiClie
         }
 
         //signInAnon();
-        mProductsRef = mDb.getReference("products");
+        mProductsRef = mDb.getDbRef().getReference("products");
         loginFormView = findViewById(R.id.login_form);
         assert loginFormView != null;
 
@@ -158,7 +158,7 @@ public class ProductListActivity extends KEActivityBase implements GoogleApiClie
         SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_button);
         assert signInButton != null;
         signInButton.setOnClickListener(this);
-        signInButton.setSize(SignInButton.SIZE_STANDARD);
+        signInButton.setSize(SignInButton.SIZE_WIDE);
         signInButton.setScopes(gso.getScopeArray());
     }
 
@@ -274,6 +274,7 @@ public class ProductListActivity extends KEActivityBase implements GoogleApiClie
         switch (item.getItemId()) {
             case R.id.menu_logout:
                 FirebaseUser user = mAuth.getCurrentUser();
+                Auth.GoogleSignInApi.signOut(mGoogleApiClient);
                 mAuth.signOut();
                 Toast.makeText(this, "Logged out " + user.getDisplayName(), Toast.LENGTH_SHORT).show();
                 invalidateOptionsMenu();
@@ -292,8 +293,6 @@ public class ProductListActivity extends KEActivityBase implements GoogleApiClie
                 Log.d(TAG, "doing log in...");
                 Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
                 startActivityForResult(signInIntent, RC_SIGN_IN);
-//                Intent signIn = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-//                startActivity(signIn);
                 break;
         }
     }
@@ -360,7 +359,6 @@ public class ProductListActivity extends KEActivityBase implements GoogleApiClie
                     } else {
                         Context context = v.getContext();
                         Intent intent = new Intent(context, ProductDetailActivity.class);
-                        Log.d(TAG, "item id: "+item.id);
                         intent.putExtra(ProductDetailFragment.ARG_ITEM_ID, item.id);
 
                         context.startActivity(intent);

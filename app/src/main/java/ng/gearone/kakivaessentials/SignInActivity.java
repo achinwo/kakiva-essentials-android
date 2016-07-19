@@ -3,7 +3,6 @@ package ng.gearone.kakivaessentials;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -19,13 +18,11 @@ import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 
-import ng.gearone.kakivaessentials.KEActivityBase;
-
 /**
  * Activity to demonstrate basic retrieval of the Google user's ID, email address, and basic
  * profile.
  */
-public class SignInActivity extends KEActivityBase implements
+public class SignInActivity extends KeActivityBase implements
         GoogleApiClient.OnConnectionFailedListener,
         View.OnClickListener {
 

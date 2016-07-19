@@ -15,11 +15,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "821268690884-4kpd6ejl346e16gg111avfig9om8jmf8.apps.googleusercontent.com",
+          "client_id": "821268690884-tnghtfo2ljnln0fgonues1bv2fletvb1.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "ng.gearone.kakivaessentials",
-            "certificate_hash": "CB82D3DAAA926B9B013EFE0E6A5C100927AC6533"
+            "certificate_hash": "5FD434353D6C70042FD16D5943FCA1ED6F3B79E6"
           }
         },
         {
